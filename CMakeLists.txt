@@ -31,6 +31,14 @@ juce_add_plugin(Parallax
     FORMATS
         AU
         VST3
+        
+    VST3_CATEGORIES
+        Fx
+        Modulation
+        Stereo
+
+    AU_MAIN_TYPE
+        kAudioUnitType_Effect
 
     PRODUCT_NAME "Parallax"
 

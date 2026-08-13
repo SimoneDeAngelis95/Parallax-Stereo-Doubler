@@ -8,7 +8,7 @@ ParallaxAudioProcessorEditor::ParallaxAudioProcessorEditor (ParallaxAudioProcess
     titleLabel.setFont (juce::FontOptions { 32.0f, juce::Font::bold });
     addAndMakeVisible (titleLabel);
 
-    taglineLabel.setText ("Two perspectives. One signal.", juce::dontSendNotification);
+    taglineLabel.setText ("One signal. Two perspectives.", juce::dontSendNotification);
     taglineLabel.setJustificationType (juce::Justification::centred);
     taglineLabel.setColour (juce::Label::textColourId, juce::Colours::lightgrey);
     addAndMakeVisible (taglineLabel);
