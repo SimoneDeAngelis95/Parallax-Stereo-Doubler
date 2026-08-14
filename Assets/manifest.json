@@ -1,0 +1,57 @@
+{
+  "panel-background.png": {
+    "type": "background",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  "knob-offset-filmstrip.png": {
+    "type": "vertical-filmstrip",
+    "frameSize": [
+      320,
+      320
+    ],
+    "frames": 128
+  },
+  "knob-small-filmstrip.png": {
+    "type": "vertical-filmstrip",
+    "frameSize": [
+      192,
+      192
+    ],
+    "frames": 101
+  },
+  "toggle-left.png": {
+    "type": "state",
+    "size": [
+      320,
+      320
+    ],
+    "value": "left"
+  },
+  "toggle-right.png": {
+    "type": "state",
+    "size": [
+      320,
+      320
+    ],
+    "value": "right"
+  },
+  "led-off.png": {
+    "type": "state",
+    "size": [
+      128,
+      128
+    ],
+    "value": "off"
+  },
+  "led-on.png": {
+    "type": "state",
+    "size": [
+      128,
+      128
+    ],
+    "value": "on"
+  }
+}

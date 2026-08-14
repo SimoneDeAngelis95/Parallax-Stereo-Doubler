@@ -4,8 +4,34 @@
 ParallaxAudioProcessor::ParallaxAudioProcessor()
     : AudioProcessor (BusesProperties()
                           .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                          .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
+                          .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
+      parameters (*this, nullptr, "ParallaxState", createParameterLayout())
 {
+}
+
+ParallaxAudioProcessor::APVTS::ParameterLayout ParallaxAudioProcessor::createParameterLayout()
+{
+    APVTS::ParameterLayout layout;
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { "offset", 1 }, "Offset",
+        juce::NormalisableRange<float> { 0.0f, 50.0f, 1.0f }, 20.0f,
+        juce::AudioParameterFloatAttributes().withLabel ("ms")));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { "delayedSide", 1 }, "Delayed Side", true));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { "spread", 1 }, "Spread",
+        juce::NormalisableRange<float> { 0.0f, 200.0f, 1.0f }, 100.0f,
+        juce::AudioParameterFloatAttributes().withLabel ("%")));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { "wow", 1 }, "Wow",
+        juce::NormalisableRange<float> { 0.0f, 100.0f, 1.0f }, 0.0f,
+        juce::AudioParameterFloatAttributes().withLabel ("%")));
+
+    return layout;
 }
 
 void ParallaxAudioProcessor::prepareToPlay (double, int)
@@ -101,16 +127,20 @@ void ParallaxAudioProcessor::changeProgramName (int, const juce::String&)
 {
 }
 
-void ParallaxAudioProcessor::getStateInformation (juce::MemoryBlock&)
+void ParallaxAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    if (auto xml = parameters.copyState().createXml())
+        copyXmlToBinary (*xml, destData);
 }
 
-void ParallaxAudioProcessor::setStateInformation (const void*, int)
+void ParallaxAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    if (auto xml = getXmlFromBinary (data, sizeInBytes))
+        if (xml->hasTagName (parameters.state.getType()))
+            parameters.replaceState (juce::ValueTree::fromXml (*xml));
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ParallaxAudioProcessor();
 }
-

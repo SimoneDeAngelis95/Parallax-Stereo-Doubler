@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(PARALLAX_COPY_PLUGIN_AFTER_BUILD
+       "Copy built plugin formats to the system plug-in folders"
+       ON)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -34,7 +38,6 @@ juce_add_plugin(Parallax
         
     VST3_CATEGORIES
         Fx
-        Modulation
         Stereo
 
     AU_MAIN_TYPE
@@ -47,7 +50,7 @@ juce_add_plugin(Parallax
     NEEDS_MIDI_OUTPUT FALSE
     IS_MIDI_EFFECT FALSE
 
-    COPY_PLUGIN_AFTER_BUILD TRUE
+    COPY_PLUGIN_AFTER_BUILD ${PARALLAX_COPY_PLUGIN_AFTER_BUILD}
 )
 
 juce_generate_juce_header(Parallax)
@@ -58,6 +61,15 @@ target_sources(Parallax
         Source/PluginProcessor.h
         Source/PluginEditor.cpp
         Source/PluginEditor.h
+        Source/ui/DelayedSideSwitch.cpp
+        Source/ui/DelayedSideSwitch.h
+        Source/ui/DistressedText.cpp
+        Source/ui/DistressedText.h
+        Source/ui/FilmstripKnob.cpp
+        Source/ui/FilmstripKnob.h
+        Source/ui/ParallaxFonts.cpp
+        Source/ui/ParallaxFonts.h
+        Source/ui/ParallaxStyle.h
 )
 
 target_compile_definitions(Parallax
@@ -67,8 +79,24 @@ target_compile_definitions(Parallax
         JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
+juce_add_binary_data(ParallaxAssets
+    SOURCES
+        Assets/panel-background.png
+        Assets/knob-offset-filmstrip.png
+        Assets/knob-small-filmstrip.png
+        Assets/toggle-left.png
+        Assets/toggle-right.png
+        Assets/led-off.png
+        Assets/led-on.png
+        Assets/Fonts/BebasNeue-Regular.ttf
+        Assets/Fonts/CormorantGaramond-Variable.ttf
+        Assets/Fonts/DSEG7Classic-Regular.ttf
+)
+
+
 target_link_libraries(Parallax
     PRIVATE
+        ParallaxAssets
         juce::juce_audio_utils
         juce::juce_dsp
 
