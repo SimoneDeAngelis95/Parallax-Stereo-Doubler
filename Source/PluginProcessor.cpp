@@ -7,6 +7,16 @@ ParallaxAudioProcessor::ParallaxAudioProcessor()
                           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       parameters (*this, nullptr, "ParallaxState", createParameterLayout())
 {
+    // Cache raw parameter pointers now that the layout has been created
+    offsetParameter = parameters.getRawParameterValue ("offset");
+    delayedSideParameter = parameters.getRawParameterValue ("delayedSide");
+    spreadParameter = parameters.getRawParameterValue ("spread");
+    wowParameter = parameters.getRawParameterValue ("wow");
+
+    jassert (offsetParameter != nullptr);
+    jassert (delayedSideParameter != nullptr);
+    jassert (spreadParameter != nullptr);
+    jassert (wowParameter != nullptr);
 }
 
 ParallaxAudioProcessor::APVTS::ParameterLayout ParallaxAudioProcessor::createParameterLayout()
@@ -54,19 +64,22 @@ bool ParallaxAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
         || outputLayout == juce::AudioChannelSet::stereo();
 }
 
-void ParallaxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-                                           juce::MidiBuffer&)
+void ParallaxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
 
-    for (auto channel = getTotalNumInputChannels();
-         channel < getTotalNumOutputChannels();
-         ++channel)
-    {
+    for (auto channel = getTotalNumInputChannels(); channel < getTotalNumOutputChannels(); ++channel)
         buffer.clear (channel, 0, buffer.getNumSamples());
-    }
+    
+    // ----------------------------------------------------------------------------------------------------
+    const auto offsetMs = offsetParameter->load();
+    const auto delayRight = delayedSideParameter->load(); // >= 0.5f;
+    const auto spreadPercent = spreadParameter->load();
+    const auto wowPercent = wowParameter->load();
 
-    // Pass-through checkpoint: the input audio intentionally remains unchanged.
+    DBG(delayRight);
+    
+    
 }
 
 juce::AudioProcessorEditor* ParallaxAudioProcessor::createEditor()

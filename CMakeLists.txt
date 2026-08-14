@@ -61,6 +61,10 @@ target_sources(Parallax
         Source/PluginProcessor.h
         Source/PluginEditor.cpp
         Source/PluginEditor.h
+        Source/dsp/ParallaxEngine.cpp
+        Source/dsp/ParallaxEngine.h
+        Source/dsp/WowModulator.cpp
+        Source/dsp/WowModulator.h
         Source/ui/DelayedSideSwitch.cpp
         Source/ui/DelayedSideSwitch.h
         Source/ui/DistressedText.cpp

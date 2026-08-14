@@ -40,6 +40,11 @@ private:
     static APVTS::ParameterLayout createParameterLayout();
 
     APVTS parameters;
-
+    
+    std::atomic<float>* offsetParameter = nullptr;
+    std::atomic<float>* delayedSideParameter = nullptr;
+    std::atomic<float>* spreadParameter = nullptr;
+    std::atomic<float>* wowParameter = nullptr;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParallaxAudioProcessor)
 };
