@@ -1,6 +1,6 @@
 #pragma once
-
 #include <JuceHeader.h>
+#include "dsp/ParallaxEngine.h"
 
 class ParallaxAudioProcessor final : public juce::AudioProcessor
 {
@@ -45,6 +45,8 @@ private:
     std::atomic<float>* delayedSideParameter = nullptr;
     std::atomic<float>* spreadParameter = nullptr;
     std::atomic<float>* wowParameter = nullptr;
+    
+    ParallaxEngine parallax;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParallaxAudioProcessor)
 };

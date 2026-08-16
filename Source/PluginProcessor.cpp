@@ -46,6 +46,7 @@ ParallaxAudioProcessor::APVTS::ParameterLayout ParallaxAudioProcessor::createPar
 
 void ParallaxAudioProcessor::prepareToPlay (double, int)
 {
+    parallax.prepare(getSampleRate());
 }
 
 void ParallaxAudioProcessor::releaseResources()
@@ -72,13 +73,16 @@ void ParallaxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
         buffer.clear (channel, 0, buffer.getNumSamples());
     
     // ----------------------------------------------------------------------------------------------------
-    const auto offsetMs = offsetParameter->load();
-    const auto delayRight = delayedSideParameter->load(); // >= 0.5f;
-    const auto spreadPercent = spreadParameter->load();
-    const auto wowPercent = wowParameter->load();
+    const float offsetMs = offsetParameter->load();
+    const bool delayRight = static_cast<bool>(delayedSideParameter->load());
+    const float spreadPercent = spreadParameter->load();
+    const float wowPercent = wowParameter->load();
 
-    DBG(delayRight);
-    
+    parallax.setDelayedSide(delayRight);
+    parallax.setOffsetMs(offsetMs);
+    parallax.setSpread(spreadPercent);
+    parallax.setWow(wowPercent);
+    parallax.process(buffer);
     
 }
 
