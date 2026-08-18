@@ -6,7 +6,11 @@ void WowModulator::prepare (double newSampleRate, float maximumDepthMs)
 
     maximumDepthSamples = maximumDepthMs * static_cast<float>(sampleRate) / 1000.0f;
 
-    phaseIncrement = juce::MathConstants<float>::twoPi * rateHz / static_cast<float>(sampleRate);
+    const auto phaseIncrementPerHz = juce::MathConstants<float>::twoPi / static_cast<float> (sampleRate);
+    
+    wowPhaseIncrement = phaseIncrementPerHz * wowRateHz;
+    driftPhaseIncrement = phaseIncrementPerHz * driftRateHz;
+    flutterPhaseIncrement = phaseIncrementPerHz * flutterRateHz;
 
     smoothedAmount.reset(sampleRate, 0.02);
     smoothedAmount.setCurrentAndTargetValue(0.0f);
@@ -16,9 +20,14 @@ void WowModulator::prepare (double newSampleRate, float maximumDepthMs)
 
 void WowModulator::reset()
 {
-    phase = -juce::MathConstants<float>::halfPi;
+    const auto startingPhase = -juce::MathConstants<float>::halfPi;
 
-    smoothedAmount.setCurrentAndTargetValue(smoothedAmount.getTargetValue());
+    wowPhase = startingPhase;
+    driftPhase = startingPhase;
+    flutterPhase = startingPhase;
+
+    smoothedAmount.setCurrentAndTargetValue(smoothedAmount.getTargetValue()
+    );
 }
 
 void WowModulator::setAmount (float amountZeroToOne)
@@ -31,17 +40,30 @@ float WowModulator::getNextOffsetSamples()
 {
     const auto amount = smoothedAmount.getNextValue();
 
-    const auto sineValue = std::sin(phase);
+    const auto combinedWave =
+          std::sin (wowPhase)     * wowWeight
+        + std::sin (driftPhase)   * driftWeight
+        + std::sin (flutterPhase) * flutterWeight;
 
-    // convert the sinusoid from -1...+1 to 0...1.
-    const auto unipolarValue = (sineValue + 1.0f) * 0.5f;
+    // Convert the combined waveform from -1...+1 to 0...1.
+    const auto unipolarValue = (combinedWave + 1.0f) * 0.5f;
 
     const auto offsetSamples = unipolarValue * maximumDepthSamples * amount;
 
-    phase += phaseIncrement;
+    wowPhase += wowPhaseIncrement;
+    driftPhase += driftPhaseIncrement;
+    flutterPhase += flutterPhaseIncrement;
 
-    if (phase >= juce::MathConstants<float>::pi * 1.5f)
-        phase -= juce::MathConstants<float>::twoPi;
+    const auto endOfCycle = juce::MathConstants<float>::pi * 1.5f; // = 3/2π
+
+    if (wowPhase >= endOfCycle)
+        wowPhase -= juce::MathConstants<float>::twoPi;
+
+    if (driftPhase >= endOfCycle)
+        driftPhase -= juce::MathConstants<float>::twoPi;
+
+    if (flutterPhase >= endOfCycle)
+        flutterPhase -= juce::MathConstants<float>::twoPi;
 
     return offsetSamples;
 }

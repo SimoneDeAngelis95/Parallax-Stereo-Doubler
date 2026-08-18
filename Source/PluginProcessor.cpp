@@ -117,7 +117,7 @@ bool ParallaxAudioProcessor::isMidiEffect() const
 
 double ParallaxAudioProcessor::getTailLengthSeconds() const
 {
-    return 0.053; // max tail 50 ms + 3 ms wow
+    return ParallaxEngine::getTailLengthSeconds();
 }
 
 int ParallaxAudioProcessor::getNumPrograms()

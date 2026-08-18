@@ -91,7 +91,7 @@ void ParallaxEngine::process(juce::AudioBuffer<float>& buffer)
         // SMOOTHING DELAY TIME AND WOW
         const float baseDelaySamples = smoothedDelaySamples.getNextValue();
         const float wowOffsetSamples = wowModulator.getNextOffsetSamples();
-        const float currentDelaySamples = baseDelaySamples + wowOffsetSamples;
+        const float currentDelaySamples = juce::jlimit(0.0f, static_cast<float> (delayBufferSize - 2), baseDelaySamples + wowOffsetSamples);
         const int delayFloor = static_cast<int> (std::floor (currentDelaySamples));                  // get the integer part of it
         const float fraction = currentDelaySamples - static_cast<float> (delayFloor);                // get the decimal part of it
 
@@ -136,4 +136,9 @@ void ParallaxEngine::applySpread (float& left, float& right, float amount) const
 
     left = mid + side * amount;                 // mid + side = (left/2 - right/2) + (left/2 -right/2) = left
     right = mid - side * amount;                // mid - side = (left/2 - right/2) - (left/2 -right/2) = right
+}
+
+double ParallaxEngine::getTailLengthSeconds()
+{
+    return static_cast<double>(maximumOffsetMs + maximumWowDepthMs) / 1000.0;
 }

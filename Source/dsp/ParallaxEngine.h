@@ -14,6 +14,8 @@ public:
     void setSpread(float amount);
     void setWow(float amount);
     
+    static double getTailLengthSeconds();
+    
     void process(juce::AudioBuffer<float>& buffer);
     
 private:
@@ -21,7 +23,7 @@ private:
     void applySpread (float& left, float& right, float amount) const noexcept;
     
     static constexpr float maximumOffsetMs = 50.0f;
-    static constexpr float maximumWowDepthMs = 3.0f;
+    static constexpr float maximumWowDepthMs = 10.0f;
     
     double sampleRate = 44100.0;
     
