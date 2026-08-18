@@ -46,7 +46,7 @@ ParallaxAudioProcessor::APVTS::ParameterLayout ParallaxAudioProcessor::createPar
 
 void ParallaxAudioProcessor::prepareToPlay (double, int)
 {
-    parallax.prepare(getSampleRate());
+    parallax.prepare(getSampleRate(), getTotalNumInputChannels() == 1, offsetParameter->load(), spreadParameter->load());
 }
 
 void ParallaxAudioProcessor::releaseResources()
@@ -57,12 +57,11 @@ bool ParallaxAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 {
     const auto inputLayout = layouts.getMainInputChannelSet();
     const auto outputLayout = layouts.getMainOutputChannelSet();
+    
+    const bool monoToStereo = inputLayout == juce::AudioChannelSet::mono() && outputLayout == juce::AudioChannelSet::stereo();
+    const bool stereoToStereo = inputLayout == juce::AudioChannelSet::stereo() && outputLayout == juce::AudioChannelSet::stereo();
 
-    if (inputLayout != outputLayout)
-        return false;
-
-    return outputLayout == juce::AudioChannelSet::mono()
-        || outputLayout == juce::AudioChannelSet::stereo();
+    return monoToStereo || stereoToStereo;
 }
 
 void ParallaxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
@@ -118,7 +117,7 @@ bool ParallaxAudioProcessor::isMidiEffect() const
 
 double ParallaxAudioProcessor::getTailLengthSeconds() const
 {
-    return 0.0;
+    return 0.053; // max tail 50 ms + 3 ms wow
 }
 
 int ParallaxAudioProcessor::getNumPrograms()
