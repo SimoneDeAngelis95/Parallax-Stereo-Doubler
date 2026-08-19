@@ -1,4 +1,5 @@
 #include "WowModulator.h"
+#include <cmath>
 
 void WowModulator::prepare (double newSampleRate, float maximumDepthMs)
 {
