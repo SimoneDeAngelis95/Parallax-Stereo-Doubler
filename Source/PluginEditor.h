@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "ui/DelayedSideSwitch.h"
 #include "ui/FilmstripKnob.h"
+#include "ui/InfoPanel.h"
 
 class ParallaxAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
@@ -27,6 +28,9 @@ private:
     FilmstripKnob spreadSlider;
     FilmstripKnob wowSlider;
     DelayedSideSwitch delayedSideSwitch;
+    InfoButton infoButton;
+    juce::Label versionLabel;
+    InfoPanel infoPanel;
 
     SliderAttachment offsetAttachment;
     SliderAttachment spreadAttachment;

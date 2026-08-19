@@ -47,6 +47,28 @@ ParallaxAudioProcessorEditor::ParallaxAudioProcessorEditor (ParallaxAudioProcess
     addAndMakeVisible (wowSlider);
     addAndMakeVisible (delayedSideSwitch);
 
+    versionLabel.setText ("v" + juce::String (JucePlugin_VersionString),
+                          juce::dontSendNotification);
+    versionLabel.setJustificationType (juce::Justification::centredLeft);
+    versionLabel.setColour (juce::Label::textColourId,
+                            ParallaxStyle::ivory.withAlpha (0.62f));
+    versionLabel.setInterceptsMouseClicks (false, false);
+    addAndMakeVisible (versionLabel);
+
+    infoButton.onClick = [this]
+    {
+        infoPanel.setVisible (true);
+        infoPanel.toFront (true);
+        infoPanel.grabKeyboardFocus();
+    };
+    addAndMakeVisible (infoButton);
+
+    infoPanel.onClose = [this]
+    {
+        infoPanel.setVisible (false);
+    };
+    addChildComponent (infoPanel);
+
     setResizable (true, true);
     setResizeLimits (720, 480, 1440, 960);
     getConstrainer()->setFixedAspectRatio (1.5);
@@ -157,4 +179,8 @@ void ParallaxAudioProcessorEditor::resized()
     offsetSlider.setBounds (scaled ({ 325, 285, 220, 220 }));
     delayedSideSwitch.setBounds (scaled ({ 565, 312, 170, 170 }));
     wowSlider.setBounds (scaled ({ 750, 335, 140, 140 }));
+    versionLabel.setBounds (scaled ({ 82, 580, 106, 23 }));
+    versionLabel.setFont (ParallaxFonts::displaySans (20.0f * sx));
+    infoButton.setBounds (scaled ({ 802, 575, 72, 27 }));
+    infoPanel.setBounds (getLocalBounds());
 }

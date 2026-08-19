@@ -71,6 +71,8 @@ target_sources(Parallax
         Source/ui/DistressedText.h
         Source/ui/FilmstripKnob.cpp
         Source/ui/FilmstripKnob.h
+        Source/ui/InfoPanel.cpp
+        Source/ui/InfoPanel.h
         Source/ui/ParallaxFonts.cpp
         Source/ui/ParallaxFonts.h
         Source/ui/ParallaxStyle.h
