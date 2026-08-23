@@ -58,6 +58,34 @@ and delays the selected side.
 Host compatibility will be documented as testing progresses. A successful build
 does not by itself guarantee compatibility with every DAW.
 
+## macOS installation
+
+Parallax is not signed or notarized, so macOS may block it after installation.
+
+1. Copy `Parallax.vst3` to `/Library/Audio/Plug-Ins/VST3/` and
+   `Parallax.component` to `/Library/Audio/Plug-Ins/Components/`.
+2. Open Terminal and run:
+
+```bash
+sudo xattr -dr com.apple.quarantine "/Library/Audio/Plug-Ins/VST3/Parallax.vst3"
+sudo xattr -dr com.apple.quarantine "/Library/Audio/Plug-Ins/Components/Parallax.component"
+```
+
+3. Restart your DAW and rescan the plugins if necessary.
+
+Only run these commands on a copy of Parallax downloaded from this official
+repository.
+
+### Building the macOS installer
+
+After building the Release configuration, create the AU and VST3 installer with:
+
+```bash
+./Packaging/macOS/build-installer.sh
+```
+
+The resulting package is written to `Packaging/macOS/output/`.
+
 ## Building from source
 
 ### Requirements

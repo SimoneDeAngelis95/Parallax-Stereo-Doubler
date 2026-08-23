@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+# The installer already runs with administrator privileges.
+/usr/bin/xattr -dr com.apple.quarantine \
+    "/Library/Audio/Plug-Ins/Components/Parallax.component" 2>/dev/null || true
+
+exit 0
+
