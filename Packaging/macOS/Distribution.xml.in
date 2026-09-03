@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <title>Parallax @VERSION@</title>
+    <organization>com.simonedeangelis</organization>
+    <domains enable_localSystem="true" enable_currentUserHome="false"/>
+    <options customize="always" require-scripts="false"/>
+
+    <choices-outline>
+        <line choice="au"/>
+        <line choice="vst3"/>
+    </choices-outline>
+
+    <choice
+        id="au"
+        title="Audio Unit (AU)"
+        description="For Logic Pro, GarageBand and other Audio Unit hosts."
+        start_selected="true"
+        start_enabled="true"
+        start_visible="true">
+        <pkg-ref id="com.simonedeangelis.parallax.au"/>
+    </choice>
+
+    <choice
+        id="vst3"
+        title="VST3"
+        description="For Cubase and other VST3 hosts."
+        start_selected="true"
+        start_enabled="true"
+        start_visible="true">
+        <pkg-ref id="com.simonedeangelis.parallax.vst3"/>
+    </choice>
+
+    <pkg-ref
+        id="com.simonedeangelis.parallax.au"
+        version="@VERSION@"
+        onConclusion="none">Parallax-AU.pkg</pkg-ref>
+
+    <pkg-ref
+        id="com.simonedeangelis.parallax.vst3"
+        version="@VERSION@"
+        onConclusion="none">Parallax-VST3.pkg</pkg-ref>
+</installer-gui-script>

@@ -43,6 +43,8 @@
 build/
 Build/
 build-*/
+Packaging/macOS/output/
+Packaging/Windows/output/
 
 # CMake generated files
 CMakeFiles/
@@ -53,6 +55,7 @@ install_manifest.txt
 compile_commands.json
 
 # Temporary files
+.DS_Store
 *.tmp
 *.log
 *.bak
