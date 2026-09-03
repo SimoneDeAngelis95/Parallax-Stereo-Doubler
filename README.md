@@ -53,7 +53,7 @@ and delays the selected side.
 | Platform | Formats          | Status                                         |
 | -------- | ---------------- | ---------------------------------------------- |
 | macOS    | Audio Unit, VST3 | Beta testing                                   |
-| Windows  | VST3             | Build configuration available; testing pending |
+| Windows  | VST3 x64         | Build verified; field testing pending          |
 
 Host compatibility will be documented as testing progresses. A successful build
 does not by itself guarantee compatibility with every DAW.
@@ -92,7 +92,7 @@ The resulting package is written to `Packaging/macOS/output/`.
 
 - CMake `3.22` or newer
 - A C++20-compatible compiler
-- Xcode on macOS or Visual Studio 2022 on Windows
+- Xcode on macOS or Visual Studio 2026 on Windows
 
 JUCE `9.0.1` is downloaded automatically by CMake during the first
 configuration.
@@ -111,12 +111,14 @@ Or build the Release configuration from the terminal:
 cmake --build build-xcode --config Release
 ```
 
-### Windows — Visual Studio 2022
+### Windows — Visual Studio 2026
+
+The Visual Studio 18 generator requires CMake `4.2` or newer.
 
 Generate a 64-bit Visual Studio solution:
 
 ```powershell
-cmake -S . -B build-vs -G "Visual Studio 17 2022" -A x64
+cmake -S . -B build-vs -G "Visual Studio 18 2026" -A x64
 ```
 
 Open `build-vs/Parallax.sln` in Visual Studio, or build from the terminal:
@@ -124,6 +126,32 @@ Open `build-vs/Parallax.sln` in Visual Studio, or build from the terminal:
 ```powershell
 cmake --build build-vs --config Release
 ```
+
+### Windows installer
+
+Install [Inno Setup](https://jrsoftware.org/isinfo.php), build Parallax in Release
+mode, then run:
+
+```powershell
+.\Packaging\Windows\build-installer.ps1
+```
+
+If PowerShell blocks local scripts, enable them for the current session only and
+run the command again:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\Packaging\Windows\build-installer.ps1
+```
+
+The installer is written to `Packaging\Windows\output\`. It installs
+`Parallax.vst3` in `C:\Program Files\Common Files\VST3` and does not create an
+uninstaller. The generated installer targets Windows x64 and can be built from
+Visual Studio running natively in a Windows ARM virtual machine.
+
+Parallax and its installer are currently unsigned. If Microsoft Defender
+SmartScreen blocks the installer, choose **More info > Run anyway** only for a
+copy downloaded from this official repository.
 
 If a different Visual Studio version is installed, run `cmake --help` to see the
 available generator names.
