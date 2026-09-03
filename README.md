@@ -13,8 +13,26 @@ It is not intended to produce a conventional echo. Instead, Parallax creates two
 temporal perspectives of the same signal and lets you shape the space between
 them.
 
-> Parallax is currently in **0.1.0 beta testing**. Feedback from different hosts,
-> sample rates and audio configurations is welcome.
+> **Parallax 1.0.0** is the first stable release for macOS and Windows.
+
+## Plugin formats
+
+| Platform | Formats          |
+| -------- | ---------------- |
+| macOS    | Audio Unit, VST3 |
+| Windows  | VST3 x64         |
+
+## macOS installation
+
+Parallax is not signed or notarized, so macOS may initially block its installer.
+
+1. Open the downloaded `.pkg`. If macOS blocks it, close the warning.
+2. Open **System Settings > Privacy & Security** and scroll down to **Security**.
+3. Click **Open Anyway**, enter your password and confirm.
+4. Complete the installation and restart your DAW.
+
+Only override this warning for an installer downloaded from this official
+repository.
 
 ## Features
 
@@ -48,54 +66,7 @@ With a mono source, Parallax duplicates the input internally and creates two
 temporal perspectives. With a stereo source, it preserves the original channels
 and delays the selected side.
 
-## Plugin formats
-
-| Platform | Formats          | Status                                         |
-| -------- | ---------------- | ---------------------------------------------- |
-| macOS    | Audio Unit, VST3 | Beta testing                                   |
-| Windows  | VST3 x64         | Build verified; field testing pending          |
-
-Host compatibility will be documented as testing progresses. A successful build
-does not by itself guarantee compatibility with every DAW.
-
-## macOS installation
-
-Parallax is not signed or notarized, so macOS may block it after installation.
-
-1. Copy `Parallax.vst3` to `/Library/Audio/Plug-Ins/VST3/` and
-   `Parallax.component` to `/Library/Audio/Plug-Ins/Components/`.
-2. Open Terminal and run:
-
-```bash
-sudo xattr -dr com.apple.quarantine "/Library/Audio/Plug-Ins/VST3/Parallax.vst3"
-sudo xattr -dr com.apple.quarantine "/Library/Audio/Plug-Ins/Components/Parallax.component"
-```
-
-3. Restart your DAW and rescan the plugins if necessary.
-
-Only run these commands on a copy of Parallax downloaded from this official
-repository.
-
-### Building the macOS installer
-
-After building the Release configuration, create the AU and VST3 installer with:
-
-```bash
-./Packaging/macOS/build-installer.sh
-```
-
-The resulting package is written to `Packaging/macOS/output/`.
-
 ## Building from source
-
-### Requirements
-
-- CMake `3.22` or newer
-- A C++20-compatible compiler
-- Xcode on macOS or Visual Studio 2026 on Windows
-
-JUCE `9.0.1` is downloaded automatically by CMake during the first
-configuration.
 
 ### macOS — Xcode
 
@@ -110,6 +81,14 @@ Or build the Release configuration from the terminal:
 ```bash
 cmake --build build-xcode --config Release
 ```
+
+Create the AU and VST3 installer with:
+
+```bash
+./Packaging/macOS/build-installer.sh
+```
+
+The resulting package is written to `Packaging/macOS/output/`.
 
 ### Windows — Visual Studio 2026
 
@@ -129,29 +108,14 @@ cmake --build build-vs --config Release
 
 ### Windows installer
 
-Install [Inno Setup](https://jrsoftware.org/isinfo.php), build Parallax in Release
-mode, then run:
+After installing [Inno Setup](https://jrsoftware.org/isinfo.php), run:
 
 ```powershell
 .\Packaging\Windows\build-installer.ps1
 ```
 
-If PowerShell blocks local scripts, enable them for the current session only and
-run the command again:
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\Packaging\Windows\build-installer.ps1
-```
-
-The installer is written to `Packaging\Windows\output\`. It installs
-`Parallax.vst3` in `C:\Program Files\Common Files\VST3` and does not create an
-uninstaller. The generated installer targets Windows x64 and can be built from
-Visual Studio running natively in a Windows ARM virtual machine.
-
-Parallax and its installer are currently unsigned. If Microsoft Defender
-SmartScreen blocks the installer, choose **More info > Run anyway** only for a
-copy downloaded from this official repository.
+The installer is written to `Packaging\Windows\output\` and copies
+`Parallax.vst3` to `C:\Program Files\Common Files\VST3`.
 
 If a different Visual Studio version is installed, run `cmake --help` to see the
 available generator names.
@@ -164,21 +128,6 @@ plugin location. It can be disabled during configuration:
 cmake -S . -B build -DPARALLAX_COPY_PLUGIN_AFTER_BUILD=OFF
 ```
 
-## Testing status
-
-The current beta is being tested for:
-
-- plugin scanning and validation;
-- mono-to-stereo and stereo-to-stereo operation;
-- automation of every parameter;
-- state save and restoration;
-- multiple sample rates and buffer sizes;
-- GUI resizing and repeated editor opening;
-- long-running and multi-instance stability.
-
-Validated DAWs and operating-system versions will be listed here after the field
-testing phase.
-
 ## Notes
 
 - `SPREAD` values above `100%` intentionally exaggerate the Side component and
@@ -186,13 +135,6 @@ testing phase.
 - `WOW` is deliberately creative at high settings.
 - Parallax does not include a limiter. Manage downstream level when using extreme
   settings.
-
-## Technology
-
-Parallax is written in C++20 using JUCE and CMake. The DSP engine is separated
-from the plugin wrapper, and includes a custom circular delay buffer, linear
-fractional-delay interpolation, Mid/Side width processing and a multi-oscillator
-wow modulator.
 
 ## License
 

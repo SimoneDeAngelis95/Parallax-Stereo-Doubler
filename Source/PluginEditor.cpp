@@ -38,6 +38,9 @@ ParallaxAudioProcessorEditor::ParallaxAudioProcessorEditor (ParallaxAudioProcess
     wowSlider.setTitle ("Wow");
     wowSlider.setTextValueSuffix (" %");
 
+    spreadSlider.setPopupDisplayEnabled (true, false, this);
+    wowSlider.setPopupDisplayEnabled (true, false, this);
+
     offsetSlider.onValueChange = [this] { repaint(); };
     spreadSlider.onValueChange = [this] { repaint(); };
     wowSlider.onValueChange = [this] { repaint(); };
